@@ -3187,6 +3187,15 @@ typedef NS_ENUM(NSInteger, MessagesRangeSizeMode) {
     [self presentViewController:menuController animated:YES completion:nil];
 }
 
+#pragma mark - Attachment Picking: GIFs
+
+- (void)showGifPicker
+{
+    GifPickerViewController *view = [GifPickerViewController new];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:view];
+    [self presentViewController:navigationController animated:YES completion:nil];
+}
+
 #pragma mark UIDocumentMenuDelegate
 
 - (void)documentMenu:(UIDocumentMenuViewController *)documentMenu
@@ -4025,6 +4034,22 @@ typedef NS_ENUM(NSInteger, MessagesRangeSizeMode) {
     OWSAssert(chooseDocumentImage);
     [chooseDocumentAction setValue:chooseDocumentImage forKey:@"image"];
     [actionSheetController addAction:chooseDocumentAction];
+
+#ifdef DEBUG
+    UIAlertAction *gifAction =
+        // TODO:
+        [UIAlertAction actionWithTitle:NSLocalizedString(@"SELECT_GIF_BUTTON",
+                                           @"Label for 'select gif to attach' action sheet button")
+                                 style:UIAlertActionStyleDefault
+                               handler:^(UIAlertAction *_Nonnull action) {
+                                   [self showGifPicker];
+                               }];
+    // TODO:
+    UIImage *gifImage = [UIImage imageNamed:@"actionsheet_gif_black"];
+    OWSAssert(gifImage);
+    [gifAction setValue:gifImage forKey:@"image"];
+    [actionSheetController addAction:gifAction];
+#endif
 
     [self presentViewController:actionSheetController animated:true completion:nil];
 }
